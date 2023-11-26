@@ -5,28 +5,28 @@ const Redis = require('ioredis');
 const app = express();
 const port = 3000;
 
-// 使用 body-parser 中间件来解析 POST 请求的请求体
+//Parsing the request body of a POST request
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// 连接到 Redis 数据库
+// Connect to redis database
 const redis = new Redis({
     host: '10.0.0.52',
     port: 6379
 });
 
-// 静态文件夹，存放前端代码
+//front-end code directory
 app.use(express.static('public'));
 
-// 登录页面路由
+
 app.get('/', (req, res) => {
+    console.log("Directory: " + __dirname);
     res.sendFile(__dirname + '/public/index.html');
 });
 
-// 处理登录请求
+// Parse client requests and set the response to be returned to the client
 app.post('/login', async (req, res) => {
     const { username, password } = req.body;
 
-    // 在实际应用中，从 Redis 中获取存储的密码信息
     try {
         const storedPassword = await redis.hget(username, 'password');
 
@@ -37,7 +37,7 @@ app.post('/login', async (req, res) => {
         }
     } catch (error) {
         console.error('Redis Error:', error);
-        res.status(500).send('Internal Server Error');
+        res.status(500).send('Server Error');
     }
 });
 
