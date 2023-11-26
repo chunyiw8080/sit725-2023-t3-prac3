@@ -1,6 +1,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const Redis = require('ioredis');
+const path = require('path');
 
 const app = express();
 const port = 3000;
@@ -19,7 +20,6 @@ app.use(express.static('public'));
 
 
 app.get('/', (req, res) => {
-    console.log("Directory: " + __dirname);
     res.sendFile(__dirname + '/public/index.html');
 });
 
@@ -32,6 +32,7 @@ app.post('/login', async (req, res) => {
 
         if (storedPassword && storedPassword === password) {
             res.send('Success');
+            //res.sendFile(path.join(__dirname, '/public/dashboard.html'));
         } else {
             res.send('FATAL: incorrect username or password');
         }
